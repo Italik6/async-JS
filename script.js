@@ -46,3 +46,54 @@ function Callbacks() {
     }
   });
 }
+
+//promises
+function get(url) {
+  return new Promise(function(resolve, reject) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", url, true);
+    xhttp.onload = function() {
+      if (xhttp.status == 200) {
+        resolve(JSON.parse(xhttp.response));
+      } else {
+        reject(xhttp.statusText);
+      }
+    };
+    xhttp.onerror = function() {
+      reject(xhttp.statusText);
+    };
+    xhttp.send();
+  });
+}
+
+function Promises() {
+  var promise = get("https://jsonplaceholder.typicode.com/users");
+  promise
+    .then(function(data) {
+      mapData(data);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+}
+
+//generators
+function Generators() {
+  genWrap(function*() {
+    var data = yield $.get("https://jsonplaceholder.typicode.com/users");
+    mapData(data);
+  });
+
+  function genWrap(generator) {
+    var gen = generator();
+
+    function handle(yielded) {
+      if (!yielded.done) {
+        yielded.value.then(function(data) {
+          return handle(gen.next(data));
+        });
+      }
+    }
+    return handle(gen.next());
+  }
+}

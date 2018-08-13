@@ -6,8 +6,8 @@ function createCode(data) {
   code.style.display = "block";
 }
 
-function mapData (data) {
-    data.map(x => createCode(x.name));
+function mapData(data) {
+  data.map(x => createCode(x.name));
 }
 
 // Ajax requests
@@ -26,10 +26,23 @@ function AjaxVanillaJs() {
   http.send();
 }
 
-//jQuery 
-function jQuery () {
-    $.get("https://jsonplaceholder.typicode.com/users", function(data){
-        mapData(data);
-    })
+//jQuery
+function jQuery() {
+  $.get("https://jsonplaceholder.typicode.com/users", function(data) {
+    mapData(data);
+  });
+}
 
+//callback
+function Callbacks() {
+  $.ajax({
+    type: "GET",
+    url: "https://jsonplaceholder.typicode.com/users",
+    success: function(data) {
+      mapData(data);
+    },
+    error: function(jqXHR, textStatus, error) {
+      alert(error);
+    }
+  });
 }
